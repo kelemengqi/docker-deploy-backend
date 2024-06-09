@@ -1,4 +1,4 @@
-3.2.Create Dockerfile using the given information
+
 FROM openjdk:16-jdk-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 EXPOSE 8080
