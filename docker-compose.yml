@@ -1,13 +1,12 @@
-version: '3.3'
-services:
- backend:
-   image: {your docker user id}/234-deploylab-backend:latest
-   ports:
-     - "8085:8080"
+FROM openjdk:16-jdk-alpine
+RUN addgroup -S spring && adduser -S spring -G spring
+EXPOSE 8080
 
-3.4.Now the backend will run on your virtual machine on port 8085 (if the deployment is a success), now get back to the front end project. Open the src/environments/environment.prod.ts change the graphqlUri value to your ip, and the port 8085, as we have set. The example should be
- export const environment = {
- 			production: true,
-   graphqlUri: 'http://52.74.xxx.xxx:8085/graphql'
+ENV JAVA_PROFILE prod
+ARG DEPENDENCY=target/dependency
+COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY ${DEPENDENCY}/META-INF /app/META-INF
+COPY ${DEPENDENCY}/BOOT-INF/classes /app
 
-};
+ENTRYPOINT ["java", "-Dspring.profiles.active=${JAVA_PROFILE}",\
+           "-cp", "app:app/lib/*", "camt.se234.lab10.Lab10Application"]
